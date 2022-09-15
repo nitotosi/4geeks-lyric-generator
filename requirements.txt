@@ -11,6 +11,10 @@ opencv-python>=4.1.2
 matplotlib>=3.2.2
 ipyleaflet>=0.14.0
 sympy>=1.10.1
+git-lfs>=2.9.2
 
 # Machine learning ----------------------------
 sklearn
+torch>=1.12.1
+transformers>=4.22.0
+streamlit>=1.12.2
