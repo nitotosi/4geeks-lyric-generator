@@ -4,7 +4,7 @@ from tqdm import tqdm, trange
 import torch.nn.functional as F
 import streamlit as st
 
-MODEL_DIR_PATH = '/workspace/4geeks-lyric-generator/models/'
+MODEL_DIR_PATH = '../models/'
 GPT_2_TYPE = 'gpt2-medium'
 MODEL_FILE_NAME = 'model_'+ GPT_2_TYPE +'.pt'
 
@@ -95,8 +95,6 @@ def generateStreamlit(seed):
 	generated_transformed = generated_transformed.replace(')',') \n')
 	generatedLyrics = generated_transformed.replace('}','} \n')
 	return generatedLyrics
-
-#print(generateStreamlit('Mario is the best. He rocks. Let\'s go crazy.'))
 
 st.write(""" # Bienvenidos a 4geeks Lyrics Generator! """)
 input_lyrics = st.text_input('Escribe tu introducción a la letra de una canción','')
