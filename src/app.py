@@ -3,17 +3,29 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from tqdm import tqdm, trange
 import torch.nn.functional as F
 import streamlit as st
+import boto3
+import io
 
+AWS_BUCKET_NAME = '4geeks-lyric-generator'
+AWS_ACCESS_KEY_ID = 'AKIA43DLKKSK2OPY3DRZ'
+AWS_SECRET_ACCESS_KEY = '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'
 MODEL_DIR_PATH = '../models/'
 GPT_2_TYPE = 'gpt2-medium'
 MODEL_FILE_NAME = 'model_'+ GPT_2_TYPE +'.pt'
 
 #Importo tokenizador y modelo
 tokenizer = GPT2Tokenizer.from_pretrained(GPT_2_TYPE)
-device=torch.device('cpu')
+
+s3 = boto3.client('s3',
+                  aws_access_key_id = AWS_ACCESS_KEY_ID,
+                  aws_secret_access_key = AWS_SECRET_ACCESS_KEY)
+                  
+obj = s3.get_object(Bucket=AWS_BUCKET_NAME, Key=MODEL_FILE_NAME)
 
 #Cargo el modelo "fine tuneado"
-model = torch.load(MODEL_DIR_PATH + MODEL_FILE_NAME, map_location=device)
+device=torch.device('cpu')
+
+model = torch.load(io.BytesIO(obj['Body'].read()), map_location=device)
 model.to('cpu')
 
 def generate(
@@ -79,7 +91,6 @@ def generate(
               generated_list.append(output_text)
                 
     return generated_list
-
 
 def generateStreamlit(seed):
 	generated = generate(model, tokenizer, seed, entry_count=1)
